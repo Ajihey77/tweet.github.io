@@ -35,9 +35,8 @@ async function handler(
   }
   res.json({
     ok: true,
+    profile: dbUser
   });
-
-  console.log(res)
 }
 
 export default withApiSession(handler);

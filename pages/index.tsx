@@ -15,7 +15,7 @@ export default () => {
   console.log(user)
   useUser();
     return(
-    <div className="bg-black w-full h-screen grid grid-cols-4">
+    <div className="bg-black w-full h-full grid grid-cols-4">
       <div className="">
         <div className='flex flex-col gap-5 mt-20'>
           <button className='bg-blue-600 hover:bg-blue-300 rounded-full w-44 py-2 pl-2 text-white text-xl font-extrabold text-left ml-8'><a href="/create-tweet"># 트윗 작성하기</a></button>
@@ -51,7 +51,7 @@ export default () => {
           <div className='col-span-5'>
             <div>
               <span className="text-white"></span>
-              <span className="text-gray-400 text-xs ml-2">{user? user?.email : "로딩중"}</span>
+              <span className="text-gray-400 text-xs ml-2">userId: {t.userId}</span>
             </div>
             <span className="text-white">{t.text}</span>
             <div className="flex space-x-0.5 text-sm  text-gray-400 justify-end mr-32">

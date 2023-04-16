@@ -8,7 +8,17 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   if (req.method === "GET") {
-        const tweets = await db.tweet.findMany({});
+        const tweets = await db.tweet.findMany(
+          {
+            include: {
+              _count: {
+                select: {
+                  likes: true,
+                },
+              },
+            },
+          }
+        );
         res.json({
           ok: true,
           tweets,

@@ -13,6 +13,7 @@ export default function useUser() {
     typeof window === "undefined" ? null : "/api/user/me"
   );
   const router = useRouter();
+  
   useEffect(() => {
     if (data && !data.ok) {
       router.replace("/log-in");

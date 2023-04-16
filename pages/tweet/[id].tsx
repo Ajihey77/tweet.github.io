@@ -2,18 +2,26 @@ import React from "react";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { Tweet } from '@prisma/client';
+import useMutation from "../../lib/client/useMutation"
 
 interface Response {
   ok: boolean;
   tweet: Tweet[];
+  isLiked: boolean;
 }
 
 export default () => {
   const router = useRouter();
   console.log(router.query.id);
-  const { data } = useSWR<Response>(
+  const { data, mutate: boundMutate } = useSWR<Response>(
     router.query.id ? `/api/tweets/${router.query.id}` : null
   );
+  const [toggleFav] = useMutation(`/api/tweets/${router.query.id}/fav`);
+  const onFavClick = () => {
+    if (!data) return;
+    boundMutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
+  toggleFav({});
+  };
   console.log(data);
     return(
     <div className="bg-black w-full h-screen grid grid-cols-4">
@@ -52,7 +60,24 @@ export default () => {
               <span className="text-gray-400 text-xs ml-2">id:{t.userId}</span>
             </div>
             <span className="text-white">{t.text}</span>
-            <div className="flex space-x-0.5 text-sm  text-gray-400 justify-end mr-32">
+            <div onClick={onFavClick} className="flex space-x-0.5 text-sm  text-gray-400 justify-end mr-32">
+            {data.isLiked ? (
+              <svg
+                className="w-7 h-7"
+                fill="currentColor"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                ></path>
+              </svg>
+            ):
+            (
               <svg
                 className="w-7 h-7"
                 fill="none"
@@ -67,6 +92,7 @@ export default () => {
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 ></path>
               </svg>
+            )}
           </div>
           </div>
         </div>
